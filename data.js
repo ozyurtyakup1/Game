@@ -1,7 +1,7 @@
 // data.js
 import { ITEMS } from "./items.js";
-import { CARPENTRY_RECIPES } from "./carpentry.recipes.js";
-import { SMITHING_RECIPES } from "./smithing.recipes.js";
+import { CARPENTRY_RECIPES } from "./skills/carpentry.recipes.js";
+import { SMITHING_RECIPES } from "./skills/smithing.recipes.js";
 
 export const DATA = {
   items: ITEMS,

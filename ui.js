@@ -5,7 +5,6 @@ import { msToSecCeil, percent } from "./utils.js";
 
 export function bindUI({ getState, setState, render, onSave }) {
   const recipesEl = document.getElementById("recipes");
-  const resetBtn = document.getElementById("btnReset");
 
   recipesEl.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-start]");
@@ -19,15 +18,12 @@ export function bindUI({ getState, setState, render, onSave }) {
       onSave?.();
     }
   });
-
-  resetBtn.addEventListener("click", () => {
-    // main.js handles reset via exported hooks
-  });
 }
 
 function reqChip(label, need, have, isTool = false) {
   const ok = have >= need;
   const cls = ok ? "good" : "bad";
+
   return `
     <div class="reqItem">
       <div class="reqTop">
@@ -47,13 +43,11 @@ export function renderAll(state) {
   renderRecipes(state);
 }
 
-export function renderInventory(state) {
+function renderInventory(state) {
   const invEl = document.getElementById("inventory");
 
-  const ids = new Set([
-    ...Object.keys(DATA.items),
-    ...Object.keys(state.inv ?? {}),
-  ]);
+  // show items known + anything currently in inventory
+  const ids = new Set([...Object.keys(DATA.items), ...Object.keys(state.inv ?? {})]);
 
   invEl.innerHTML = Array.from(ids).map(id => `
     <div class="invRow">
@@ -63,17 +57,19 @@ export function renderInventory(state) {
   `).join("");
 }
 
-export function renderActiveStatus(state) {
+function renderActiveStatus(state) {
   const badge = document.getElementById("activeStatus");
+
   if (!state.active) {
     badge.textContent = "Idle";
     return;
   }
+
   const r = RECIPES_BY_ID[state.active.recipeId];
   badge.textContent = `Crafting: ${r ? r.name : state.active.recipeId}`;
 }
 
-export function renderRecipes(state) {
+function renderRecipes(state) {
   const recipesEl = document.getElementById("recipes");
 
   recipesEl.innerHTML = DATA.recipes.map(r => {
@@ -84,7 +80,6 @@ export function renderRecipes(state) {
     const btnText = active ? "Crafting..." : (busy ? "Busy" : "Start");
 
     const reqs = [];
-
     for (const [id, need] of Object.entries(r.inputs ?? {})) {
       reqs.push(reqChip(DATA.items[id]?.name ?? id, need, Math.floor(invCount(state, id))));
     }
