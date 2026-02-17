@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Idle Homestead - Carpentry</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="title">Idle Homestead</div>
+      <div class="subtitle">Basics • Carpentry recipes with timers</div>
+    </div>
+    <div class="right">
+      <button id="btnReset" class="btn danger">Reset</button>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="carpentry">Carpentry</button>
+  </nav>
+
+  <main class="layout">
+    <section class="card">
+      <h2>Inventory</h2>
+      <div id="inventory" class="grid"></div>
+      <div class="hint">Tools (like Hammer) are required but not consumed.</div>
+    </section>
+
+    <section class="card">
+      <div class="row">
+        <h2 style="margin:0">Carpentry Recipes</h2>
+        <div class="spacer"></div>
+        <div id="activeStatus" class="badge">Idle</div>
+      </div>
+
+      <div id="recipes" class="recipes"></div>
+    </section>
+  </main>
+
+  <!-- ✅ Updated: uses module entrypoint -->
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
