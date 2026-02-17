@@ -1,12 +1,17 @@
+// ui.js
 import { DATA, RECIPES_BY_ID } from "./data.js";
 import { canCraft, invCount, startCraft } from "./crafting.js";
 import { msToSecCeil, percent } from "./utils.js";
 
 export function bindUI({ getState, setState, render, onSave }) {
   const recipesEl = document.getElementById("recipes");
+
   recipesEl.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-start]");
     if (!btn) return;
+
+    // If disabled, do nothing (covers "busy" and "not enough materials")
+    if (btn.disabled) return;
 
     const state = getState();
     const changed = startCraft(state, btn.dataset.start);
@@ -66,7 +71,9 @@ function renderRecipes(state) {
     const active = state.active?.recipeId === r.id;
     const busy = !!state.active && !active;
 
-    const enabled = !busy && !active && canCraft(state, r);
+    const afford = canCraft(state, r);
+    const enabled = !busy && !active && afford;
+
     const btnText = active ? "Crafting..." : (busy ? "Busy" : "Start");
 
     const reqs = [];
