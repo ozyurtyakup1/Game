@@ -1,4 +1,3 @@
-// data.js
 import { ITEMS } from "./items.js";
 import { CARPENTRY_RECIPES } from "./skills/carpentry.recipes.js";
 import { SMITHING_RECIPES } from "./skills/smithing.recipes.js";

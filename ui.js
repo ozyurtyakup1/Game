@@ -1,11 +1,9 @@
-// ui.js
 import { DATA, RECIPES_BY_ID } from "./data.js";
 import { canCraft, invCount, startCraft } from "./crafting.js";
 import { msToSecCeil, percent } from "./utils.js";
 
 export function bindUI({ getState, setState, render, onSave }) {
   const recipesEl = document.getElementById("recipes");
-
   recipesEl.addEventListener("click", (e) => {
     const btn = e.target.closest("button[data-start]");
     if (!btn) return;
@@ -23,7 +21,6 @@ export function bindUI({ getState, setState, render, onSave }) {
 function reqChip(label, need, have, isTool = false) {
   const ok = have >= need;
   const cls = ok ? "good" : "bad";
-
   return `
     <div class="reqItem">
       <div class="reqTop">
@@ -45,8 +42,6 @@ export function renderAll(state) {
 
 function renderInventory(state) {
   const invEl = document.getElementById("inventory");
-
-  // show items known + anything currently in inventory
   const ids = new Set([...Object.keys(DATA.items), ...Object.keys(state.inv ?? {})]);
 
   invEl.innerHTML = Array.from(ids).map(id => `
@@ -59,12 +54,7 @@ function renderInventory(state) {
 
 function renderActiveStatus(state) {
   const badge = document.getElementById("activeStatus");
-
-  if (!state.active) {
-    badge.textContent = "Idle";
-    return;
-  }
-
+  if (!state.active) { badge.textContent = "Idle"; return; }
   const r = RECIPES_BY_ID[state.active.recipeId];
   badge.textContent = `Crafting: ${r ? r.name : state.active.recipeId}`;
 }
