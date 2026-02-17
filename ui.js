@@ -6,12 +6,22 @@ import { msToSecCeil, percent } from "./utils.js";
 export function bindUI({ getState, setState, render, onSave }) {
   const recipesEl = document.getElementById("recipes");
 
-  recipesEl.addEventListener("click", (e) => {
-    const btn = e.target.closest("button[data-start]");
-    if (!btn) return;
+  let startedFromPointer = false;
 
-    // If disabled, do nothing (covers "busy" and "not enough materials")
-    if (btn.disabled) return;
+  const tryStart = (e) => {
+    const target = e.target instanceof Element ? e.target : e.target?.parentElement;
+    const btn = target?.closest?.("button[data-start]");
+    if (!btn || btn.disabled) return;
+
+    // Ignore the click that follows the same pointer gesture
+    if (e.type === "click" && startedFromPointer) return;
+
+    if (e.type === "pointerdown") {
+      startedFromPointer = true;
+      setTimeout(() => (startedFromPointer = false), 400);
+    }
+
+    e.preventDefault();
 
     const state = getState();
     const changed = startCraft(state, btn.dataset.start);
@@ -20,7 +30,10 @@ export function bindUI({ getState, setState, render, onSave }) {
       render();
       onSave?.();
     }
-  });
+  };
+
+  recipesEl.addEventListener("pointerdown", tryStart, { passive: false });
+  recipesEl.addEventListener("click", tryStart); // keyboard accessibility
 }
 
 function reqChip(label, need, have, isTool = false) {
